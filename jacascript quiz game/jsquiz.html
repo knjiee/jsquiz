@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Quiz Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      #quiz-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      #question {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      .option {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f0f0f0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .option:hover {
+        background-color: #e0e0e0;
+      }
+      #result {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+      #next-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+      #next-btn:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="quiz-container">
+      <h1>JavaScript Quiz</h1>
+      <div id="question"></div>
+      <div id="options"></div>
+      <div id="result"></div>
+      <button id="next-btn" style="display: none">Next Question</button>
+    </div>
+
+    <script>
+      const quizData = [
+        {
+          question: "What is a variable in JavaScript?",
+          options: [
+            "A container for storing data values",
+            "A function that returns a value",
+            "A type of loop",
+            "An HTML element",
+          ],
+          correct: 0,
+        },
+        {
+          question:
+            "Which of the following is a valid way to declare a function in JavaScript?",
+          options: [
+            "function myFunction()",
+            "var myFunction = function()",
+            "const myFunction = () => {}",
+            "All of the above",
+          ],
+          correct: 3,
+        },
+        {
+          question: "What does DOM stand for?",
+          options: [
+            "Document Object Model",
+            "Data Object Model",
+            "Dynamic Object Management",
+            "Document Orientation Model",
+          ],
+          correct: 0,
+        },
+        {
+          question:
+            "Which method is used to add an element at the end of an array?",
+          options: ["push()", "pop()", "unshift()", "shift()"],
+          correct: 0,
+        },
+        {
+          question:
+            "What is the purpose of the 'typeof' operator in JavaScript?",
+          options: [
+            "To check if a variable is defined",
+            "To determine the type of a variable",
+            "To compare two variables",
+            "To assign a type to a variable",
+          ],
+          correct: 1,
+        },
+      ];
+
+      let currentQuestion = 0;
+      let score = 0;
+
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const resultEl = document.getElementById("result");
+      const nextBtn = document.getElementById("next-btn");
+
+      function loadQuestion() {
+        const question = quizData[currentQuestion];
+        questionEl.textContent = question.question;
+
+        optionsEl.innerHTML = "";
+        question.options.forEach((option, index) => {
+          const button = document.createElement("button");
+          button.textContent = option;
+          button.classList.add("option");
+          button.addEventListener("click", () => selectOption(index));
+          optionsEl.appendChild(button);
+        });
+
+        resultEl.textContent = "";
+        nextBtn.style.display = "none";
+      }
+
+      function selectOption(index) {
+        const question = quizData[currentQuestion];
+        const options = optionsEl.getElementsByClassName("option");
+
+        for (let i = 0; i < options.length; i++) {
+          options[i].disabled = true;
+          if (i === question.correct) {
+            options[i].style.backgroundColor = "#4CAF50";
+            options[i].style.color = "white";
+          }
+        }
+
+        if (index === question.correct) {
+          resultEl.textContent = "Correct!";
+          resultEl.style.color = "#4CAF50";
+          score++;
+        } else {
+          resultEl.textContent =
+            "Incorrect. The correct answer is: " +
+            question.options[question.correct];
+          resultEl.style.color = "#f44336";
+          options[index].style.backgroundColor = "#f44336";
+          options[index].style.color = "white";
+        }
+
+        nextBtn.style.display = "block";
+      }
+
+      function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          showFinalResult();
+        }
+      }
+
+      function showFinalResult() {
+        questionEl.textContent = "Quiz Completed!";
+        optionsEl.innerHTML = "";
+        resultEl.textContent = `Your score: ${score} out of ${quizData.length}`;
+        resultEl.style.color = "#333";
+        nextBtn.style.display = "none";
+      }
+
+      nextBtn.addEventListener("click", nextQuestion);
+
+      loadQuestion();
+    </script>
+  </body>
+</html>
